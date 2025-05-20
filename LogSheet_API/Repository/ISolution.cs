@@ -5,9 +5,9 @@ namespace LogSheet_API.Repository
 {
     public interface ISolution
     {
-        Task<List<Solution>> getSolutions();
-        Task<Solution> getSolutionById(SolutionDtoByID id);
-        Task<bool> saveandupdatesolution(SolutionDto solution);
+        Task<List<SolutionDto>> getSolutions();
+        Task<SolutionDto> GetSolutionById(SolutionDtoByID id);
+        Task<SolutionDto> SaveAndUpdateSolution(SaveUpdateSolutionDto saveUpdateSolutionDto);
         Task<bool> deleteSolution(int id);
     }
 }
