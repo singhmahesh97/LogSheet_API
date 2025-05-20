@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <Folder Include="ErrorLogs\" />
-    <Folder Include="Service\" />
   </ItemGroup>
 
 </Project>

@@ -3,58 +3,33 @@ using LogSheet_API.DTOs;
 using LogSheet_API.Repository;
 using LogSheet_API.VMMOdels;
 using Microsoft.AspNetCore.Mvc;
-using System.CodeDom;
 
 namespace LogSheet_API.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
-    public class SolutionController : Controller
+    public class ClientController : Controller
     {
-        private readonly ISolution _Solution;
+        private readonly IClient _client;
 
-        public SolutionController(ISolution Solution)
+
+        public ClientController(IClient client)
         {
-            this._Solution = Solution;
+            _client = client;
         }
 
         [HttpPost]
-        [Route("getSolutions")]
-        public async Task<IActionResult> getSolutions()
+        [Route("getClients")]
+        public async Task<IActionResult> getClients()
         {
 
             TransactionalInformation transaction = new TransactionalInformation();
             try
             {
-                var Solution = await _Solution.getSolutions();
-                transaction.ReturnStatus = true;    
-                return Ok(new { Solution, transaction });
-            }
-            catch(Exception ex)
-            {
-                transaction.ReturnStatus = false;
-                transaction.ReturnMessage = new List<string>();
-                string errormessage=ex.Message.ToString();
-                transaction.ReturnMessage.Add(errormessage);
-
-                Log.WriteLog("SolutionController", "getSolutions",  "Error", errormessage);
-                return BadRequest(new { transaction });
-
-            }
-        }
-
-
-        [HttpPost]
-        [Route("getSolutionById")]
-        public async Task<IActionResult> getSolutionById([FromForm] SolutionDtoByID SolutionDtoByID)
-        {
-
-            TransactionalInformation transaction = new TransactionalInformation();
-            try
-            {
-                var Solution = await _Solution.GetSolutionById(SolutionDtoByID);
+                var Clinet = await _client.GetClients();
                 transaction.ReturnStatus = true;
-                return Ok(new { Solution, transaction });
+                return Ok(new { Clinet, transaction });
             }
             catch (Exception ex)
             {
@@ -63,25 +38,51 @@ namespace LogSheet_API.Controllers
                 string errormessage = ex.Message.ToString();
                 transaction.ReturnMessage.Add(errormessage);
 
-                Log.WriteLog("SolutionController", "getSolutions", "Error", errormessage);
+                Log.WriteLog("ClientController", "getClient", "Error", errormessage);
+                return BadRequest(new { transaction });
+
+            }
+        }
+
+
+        [HttpPost]
+        [Route("getClientById")]
+        public async Task<IActionResult> getClientById([FromForm] ClientDtoByID ClientDtoByID)
+        {
+
+            TransactionalInformation transaction = new TransactionalInformation();
+            try
+            {
+                var Client = await _client.GetClientById(ClientDtoByID);
+                transaction.ReturnStatus = true;
+                return Ok(new { Client, transaction });
+            }
+            catch (Exception ex)
+            {
+                transaction.ReturnStatus = false;
+                transaction.ReturnMessage = new List<string>();
+                string errormessage = ex.Message.ToString();
+                transaction.ReturnMessage.Add(errormessage);
+
+                Log.WriteLog("ClientController", "getClients", "Error", errormessage);
                 return BadRequest(new { transaction });
 
             }
 
         }
 
-       
 
-        [HttpPost("saveandupdateSolution")]
-        public async Task<IActionResult> SaveAndUpdateSolution([FromBody] SaveUpdateSolutionDto dto)
+
+        [HttpPost("saveandupdateClient")]
+        public async Task<IActionResult> SaveAndUpdateClient([FromBody] SaveUpdateClientDto dto)
         {
 
             TransactionalInformation transaction = new TransactionalInformation();
             try
             {
-                var result = await _Solution.SaveAndUpdateSolution(dto);
+                var result = await _client.SaveAndUpdateClient(dto);
                 if (result == null)
-                    return NotFound(new { message = "Solution not found." });
+                    return NotFound(new { message = "Client not found." });
 
                 return Ok(result);
             }
@@ -92,13 +93,10 @@ namespace LogSheet_API.Controllers
                 string errormessage = ex.Message.ToString();
                 transaction.ReturnMessage.Add(errormessage);
 
-                Log.WriteLog("SolutionController", "saveandupdateSolution", "Error", errormessage);
+                Log.WriteLog("ClientController", "saveandupdateClient", "Error", errormessage);
                 return BadRequest(new { transaction });
             }
         }
-
-
-
 
 
     }

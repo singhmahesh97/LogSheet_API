@@ -27,3 +27,4 @@ public partial class Solution
 
     public virtual user? ModifiedByNavigation { get; set; }
 }
+

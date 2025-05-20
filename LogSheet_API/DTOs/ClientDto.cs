@@ -1,6 +1,6 @@
 ﻿namespace LogSheet_API.DTOs
 {
-    public class SolutionDto
+    public class ClientDto
     {
         public decimal Id { get; set; }
 
@@ -18,13 +18,14 @@
 
         public DateTime? ModifiedDate { get; set; }
     }
+    
 
-    public class SolutionDtoByID
+    public class ClientDtoByID
     {
         public decimal Id { get; set; }
     }
 
-    public class SaveUpdateSolutionDto
+    public class SaveUpdateClientDto
     {
         public decimal Id { get; set; }
 
@@ -34,6 +35,6 @@
 
         public string? Active { get; set; }
 
-        
+
     }
 }

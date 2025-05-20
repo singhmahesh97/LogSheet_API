@@ -1,60 +1,59 @@
 ﻿using LogSheet_API.Common;
 using LogSheet_API.DTOs;
+using LogSheet_API.Models;
 using LogSheet_API.Repository;
 using LogSheet_API.VMMOdels;
 using Microsoft.AspNetCore.Mvc;
-using System.CodeDom;
+
 
 namespace LogSheet_API.Controllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
-    public class SolutionController : Controller
+    public class LogSheetController : Controller
     {
-        private readonly ISolution _Solution;
+        private readonly ILogSheet _logSheet;
 
-        public SolutionController(ISolution Solution)
+        public LogSheetController(ILogSheet logSheet)
         {
-            this._Solution = Solution;
+            _logSheet = logSheet;
         }
 
         [HttpPost]
-        [Route("getSolutions")]
-        public async Task<IActionResult> getSolutions()
+        [Route("getLogSheet")]
+        public async Task<IActionResult> getLogSheet()
         {
-
             TransactionalInformation transaction = new TransactionalInformation();
             try
             {
-                var Solution = await _Solution.getSolutions();
-                transaction.ReturnStatus = true;    
-                return Ok(new { Solution, transaction });
+                var logSheet = await _logSheet.GetLogSheets();
+                transaction.ReturnStatus = true;
+                return Ok(new { logSheet, transaction });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 transaction.ReturnStatus = false;
                 transaction.ReturnMessage = new List<string>();
-                string errormessage=ex.Message.ToString();
+                string errormessage = ex.Message.ToString();
                 transaction.ReturnMessage.Add(errormessage);
-
-                Log.WriteLog("SolutionController", "getSolutions",  "Error", errormessage);
+                Log.WriteLog("LogSheetController", "getLogSheet", "Error", errormessage);
                 return BadRequest(new { transaction });
-
             }
         }
 
 
         [HttpPost]
-        [Route("getSolutionById")]
-        public async Task<IActionResult> getSolutionById([FromForm] SolutionDtoByID SolutionDtoByID)
+        [Route("getlogSheetById")]
+        public async Task<IActionResult> getlogSheetById([FromForm] LogSheetDtoByID logSheetDtoBy)
         {
 
             TransactionalInformation transaction = new TransactionalInformation();
             try
             {
-                var Solution = await _Solution.GetSolutionById(SolutionDtoByID);
+                var logSheet = await _logSheet.GetLogSheetById(logSheetDtoBy);
                 transaction.ReturnStatus = true;
-                return Ok(new { Solution, transaction });
+                return Ok(new { logSheet, transaction });
             }
             catch (Exception ex)
             {
@@ -63,25 +62,22 @@ namespace LogSheet_API.Controllers
                 string errormessage = ex.Message.ToString();
                 transaction.ReturnMessage.Add(errormessage);
 
-                Log.WriteLog("SolutionController", "getSolutions", "Error", errormessage);
+                Log.WriteLog("LogSheetController", "getCLogSheet", "Error", errormessage);
                 return BadRequest(new { transaction });
 
             }
-
         }
 
-       
-
-        [HttpPost("saveandupdateSolution")]
-        public async Task<IActionResult> SaveAndUpdateSolution([FromBody] SaveUpdateSolutionDto dto)
+        [HttpPost("saveandupdateLogSheet")]
+        public async Task<IActionResult> SaveAndUpdateLogSheet([FromBody] SaveUpdateLogSheetDto dto)
         {
 
             TransactionalInformation transaction = new TransactionalInformation();
             try
             {
-                var result = await _Solution.SaveAndUpdateSolution(dto);
+                var result = await _logSheet.SaveAndUpdateLogSheet(dto);
                 if (result == null)
-                    return NotFound(new { message = "Solution not found." });
+                    return NotFound(new { message = "LogSheet not found." });
 
                 return Ok(result);
             }
@@ -92,14 +88,11 @@ namespace LogSheet_API.Controllers
                 string errormessage = ex.Message.ToString();
                 transaction.ReturnMessage.Add(errormessage);
 
-                Log.WriteLog("SolutionController", "saveandupdateSolution", "Error", errormessage);
+                Log.WriteLog("LogSheetController", "SaveAndUpdateLogSheet", "Error", errormessage);
                 return BadRequest(new { transaction });
             }
         }
 
-
-
-
-
     }
+
 }
